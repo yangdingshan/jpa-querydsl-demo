@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoApplicationTests {
+public class ReadTests {
 
     @Autowired
     private ReadUserService readUserService;
@@ -135,7 +135,7 @@ public class DemoApplicationTests {
     public void findByUserPropertiesTest() {
         Pageable pageRequest = new PageRequest(0, 2);
         Page<User> page = readUserService.findByUserProperties(pageRequest, "Tony", "123");
-        System.out.println("总条数：" + page.getTotalPages());
+        System.out.println("总条数：" + page.getTotalElements());
         System.out.println("内容：" + page.getContent());
     }
 
@@ -154,6 +154,21 @@ public class DemoApplicationTests {
     @Test
     public void findUserByExampleMatcherTest() {
         List<User> list = readUserService.findUserByExampleMatcher();
+        System.out.println(list);
+    }
+
+    @Test
+    public void findByUserSpecificationTest() {
+        Pageable pageRequest = new PageRequest(0, 2);
+        Page<User> page = readUserService.findByUserSpecification("Tony", "123", 60, pageRequest);
+        System.out.println("总页数：" + page.getTotalPages());
+        System.out.println("总条数：" + page.getTotalElements());
+        System.out.println("内容：" + page.getContent());
+    }
+
+    @Test
+    public void findNativeTest() {
+        List<UserDeptDTO> list = readUserService.findNative(1);
         System.out.println(list);
     }
 }

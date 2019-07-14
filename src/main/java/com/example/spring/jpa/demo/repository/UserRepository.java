@@ -1,13 +1,16 @@
 package com.example.spring.jpa.demo.repository;
 
 import com.example.spring.jpa.demo.model.User;
+import com.example.spring.jpa.demo.model.UserDeptDTO;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +86,31 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     @Query("select u from #{#entityName} u where u.username = ?1")
     List<User> findByUsername(String username);
 
-    List<User> findByUsernameContaining(String username);
+    /**
+     * 用sql查询一个部门下人员的信息
+     * @param deptId
+     * @return
+     */
+    List<UserDeptDTO> findByNative(int deptId);
+
+    /**
+     * 删除年龄某个范围的人员
+     * @param start
+     * @param ent
+     */
+    @Transactional
+    void deleteByAgeIsBetween(int start, int ent);
+
+    /**
+     * 根据用户名删除
+     * @param username
+     */
+    @Transactional
+    void deleteByUsername(String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from t_user where user_id = ?1",nativeQuery = true)
+    void deleteUserById(int userId);
 
 }

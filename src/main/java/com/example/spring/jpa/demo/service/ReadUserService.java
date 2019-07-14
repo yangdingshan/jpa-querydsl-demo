@@ -182,4 +182,21 @@ public interface ReadUserService {
      * @return
      */
     List<User> findUserByExampleMatcher();
+
+    /**
+     * Specification分页查询
+     * @param username
+     * @param password
+     * @param age
+     * @param pageable
+     * @return
+     */
+    Page<User> findByUserSpecification(String username, String password, int age, Pageable pageable);
+
+    /**
+     * 使用sql查询
+     * @param deptId
+     * @return
+     */
+    List<UserDeptDTO> findNative(int deptId);
 }

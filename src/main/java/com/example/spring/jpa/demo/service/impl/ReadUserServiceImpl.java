@@ -21,8 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -364,7 +368,42 @@ public class ReadUserServiceImpl implements ReadUserService {
 
 
     //////////拼接查询条件Specification查询///////////////
-    
+
+    /**
+     * Specification分页查询
+     * @param username
+     * @param password
+     * @param age
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<User> findByUserSpecification(String username, String password, int age, Pageable pageable) {
+        // 拼接条件
+        Specification<User> specification = new Specification<User>() {
+            @Override
+            public javax.persistence.criteria.Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                javax.persistence.criteria.Predicate p1 = cb.like(root.get("username").as(String.class), "%" + username + "%");
+                javax.persistence.criteria.Predicate p2 = cb.equal(root.get("password").as(String.class), password);
+                javax.persistence.criteria.Predicate p3 = cb.lt(root.get("age").as(Integer.class), age);
+                javax.persistence.criteria.Predicate p = cb.and(p3, cb.or(p1, p2));
+                return p;
+            }
+        };
+        Page<User> page = userRepository.findAll(specification, pageable);
+        return page;
+    }
+
+    /**
+     * 使用entityManager.createNativeQuery(sql)查询
+     * @param deptId
+     * @return
+     */
+    @Override
+    public List<UserDeptDTO> findNative(int deptId) {
+        List<UserDeptDTO> list = userRepository.findByNative(deptId);
+        return list;
+    }
 
 }
 
