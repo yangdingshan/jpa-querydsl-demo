@@ -2,7 +2,6 @@ package com.example.spring.jpa.demo;
 
 import com.example.spring.jpa.demo.model.User;
 import com.example.spring.jpa.demo.service.DeleteUserService;
-import org.hibernate.sql.Delete;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

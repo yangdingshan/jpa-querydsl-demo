@@ -105,12 +105,27 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
      * 根据用户名删除
      * @param username
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     void deleteByUsername(String username);
 
-    @Transactional
+    /**
+     * 删除用户
+     * @param userId
+     */
     @Modifying
+    @Transactional(rollbackFor = Exception.class)
     @Query(value = "delete from t_user where user_id = ?1",nativeQuery = true)
     void deleteUserById(int userId);
+
+    /**
+     * 修改用户姓名
+     * @param username
+     * @param userId
+     */
+    @Modifying(clearAutomatically = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Query("update User set username=?1 where userId = ?2")
+    void updateUser(String username, int userId);
+
 
 }
