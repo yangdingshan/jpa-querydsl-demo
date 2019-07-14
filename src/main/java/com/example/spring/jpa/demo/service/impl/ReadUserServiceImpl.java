@@ -11,18 +11,18 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.management.Query;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -105,10 +105,28 @@ public class ReadUserServiceImpl implements ReadUserService {
      * 通过Example查询
      * @return
      */
+    @Override
     public List<User> findUserByExample() {
         User user = new User();
-        user.setUsername("Tom");
+        user.setUsername("Tony");
         List<User> list = userRepository.findAll(Example.of(user));
+        return list;
+    }
+
+    /**
+     * 自定义ExampleMatcher查询
+     * @return
+     */
+    @Override
+    public List<User> findUserByExampleMatcher() {
+        User uer = new User();
+        uer.setUsername("To");
+        uer.setPassword("1");
+        ExampleMatcher match = ExampleMatcher.matching()
+                .withMatcher("username", matcher -> matcher.startsWith())
+                .withMatcher("password", matcher -> matcher.contains());
+        Example<User> example = Example.of(uer, match);
+        List<User> list = userRepository.findAll(example);
         return list;
     }
 
@@ -290,6 +308,25 @@ public class ReadUserServiceImpl implements ReadUserService {
                 ).fetch();
     }
 
+    /**
+     * QueryDSL子查询，查询年龄最大的
+     * @return
+     */
+    @Override
+    public List<User> findByMaxindex() {
+        QUser user = QUser.user;
+        return jpaQueryFactory
+                .selectFrom(user)
+                .where(
+                    user.age.eq(
+                            JPAExpressions.select(
+                                    user.age.max()
+                            )
+                            .from(user)
+                    )
+                ).fetch();
+    }
+
 
 
     ///////////////spring data jpa + QueryDSL结合////////////////////////////
@@ -326,6 +363,8 @@ public class ReadUserServiceImpl implements ReadUserService {
     }
 
 
+    //////////拼接查询条件Specification查询///////////////
+    
 
 }
 

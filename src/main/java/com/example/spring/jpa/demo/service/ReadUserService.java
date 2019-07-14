@@ -164,4 +164,22 @@ public interface ReadUserService {
      * @return
      */
     Page<User> findByUserProperties(Pageable pageable, String username, String password);
+
+    /**
+     * QueryDSL子查询，查询年龄最大的
+     * @return
+     */
+    List<User> findByMaxindex();
+
+    /**
+     * 通过Example查询
+     * @return
+     */
+    List<User> findUserByExample();
+
+    /**
+     * 自定义ExampleMatcher查询
+     * @return
+     */
+    List<User> findUserByExampleMatcher();
 }

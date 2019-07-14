@@ -138,4 +138,22 @@ public class DemoApplicationTests {
         System.out.println("总条数：" + page.getTotalPages());
         System.out.println("内容：" + page.getContent());
     }
+
+    @Test
+    public void findByMaxindexTest() {
+        List<User> list = readUserService.findByMaxindex();
+        System.out.println(list);
+    }
+
+    @Test
+    public void findUserByExampleTest() {
+        List<User> userByExample = readUserService.findUserByExample();
+        System.out.println(userByExample);
+    }
+
+    @Test
+    public void findUserByExampleMatcherTest() {
+        List<User> list = readUserService.findUserByExampleMatcher();
+        System.out.println(list);
+    }
 }

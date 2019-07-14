@@ -33,6 +33,17 @@ public class User {
     @Column(name = "dept_id")
     private Integer deptId;
 
+    @Column(name = "age")
+    private Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public Integer getDeptId() {
         return deptId;
     }
