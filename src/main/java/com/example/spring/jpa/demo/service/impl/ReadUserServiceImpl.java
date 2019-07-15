@@ -1,10 +1,15 @@
 package com.example.spring.jpa.demo.service.impl;
 
 import com.example.spring.jpa.demo.model.QDept;
+import com.example.spring.jpa.demo.model.QSchool;
+import com.example.spring.jpa.demo.model.QStudent;
 import com.example.spring.jpa.demo.model.QUser;
+import com.example.spring.jpa.demo.model.SchoolStudentDto;
+import com.example.spring.jpa.demo.model.Student;
 import com.example.spring.jpa.demo.model.User;
 import com.example.spring.jpa.demo.model.UserDTO;
 import com.example.spring.jpa.demo.model.UserDeptDTO;
+import com.example.spring.jpa.demo.repository.StudentRepository;
 import com.example.spring.jpa.demo.repository.UserRepository;
 import com.example.spring.jpa.demo.service.ReadUserService;
 import com.querydsl.core.QueryResults;
@@ -42,6 +47,9 @@ public class ReadUserServiceImpl implements ReadUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
@@ -290,6 +298,43 @@ public class ReadUserServiceImpl implements ReadUserService {
                     dto.setDeptName(model.get(dept.deptName));
                     return dto;
                 }).collect(Collectors.toList());
+    }
+
+    /**
+     * QueryDSL级联查询
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public List<SchoolStudentDto> findByQueryDslSchoolStudent(int schoolId) {
+        QStudent student = QStudent.student;
+        QSchool school = QSchool.school;
+        return jpaQueryFactory
+                .select(
+                        student.name,
+                        school.name
+                )
+                .from(student)
+                .join(student.school, school)
+                .where(school.id.eq(schoolId))
+                .fetch()
+                .stream()
+                .map(model -> {
+                    SchoolStudentDto dto = new SchoolStudentDto();
+                    dto.setStuName(model.get(student.name));
+                    dto.setSchName(model.get(school.name));
+                    return dto;
+                }).collect(Collectors.toList());
+    }
+
+    /**
+     * 一对一关系@OneToOne数据库建立外键查询，不建议这样做，维护难
+     * @return
+     */
+    @Override
+    public List<Student> findAllStudent() {
+        List<Student> list = studentRepository.findAll();
+        return list;
     }
 
     /**

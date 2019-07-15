@@ -1,5 +1,7 @@
 package com.example.spring.jpa.demo.service;
 
+import com.example.spring.jpa.demo.model.SchoolStudentDto;
+import com.example.spring.jpa.demo.model.Student;
 import com.example.spring.jpa.demo.model.User;
 import com.example.spring.jpa.demo.model.UserDTO;
 import com.example.spring.jpa.demo.model.UserDeptDTO;
@@ -199,4 +201,17 @@ public interface ReadUserService {
      * @return
      */
     List<UserDeptDTO> findNative(int deptId);
+
+    /**
+     * 一对一关系@OneToOne数据库建立外键查询，不建议这样做，维护难
+     * @return
+     */
+    List<Student> findAllStudent();
+
+    /**
+     * QueryDSL级联查询
+     * @param schoolId
+     * @return
+     */
+    List<SchoolStudentDto> findByQueryDslSchoolStudent(int schoolId);
 }

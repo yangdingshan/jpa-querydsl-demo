@@ -1,11 +1,14 @@
 package com.example.spring.jpa.demo;
 
+import com.example.spring.jpa.demo.model.SchoolStudentDto;
+import com.example.spring.jpa.demo.model.Student;
 import com.example.spring.jpa.demo.model.User;
 import com.example.spring.jpa.demo.model.UserDTO;
 import com.example.spring.jpa.demo.model.UserDeptDTO;
 import com.example.spring.jpa.demo.repository.UserRepository;
 import com.example.spring.jpa.demo.service.ReadUserService;
 import com.querydsl.core.QueryResults;
+import net.minidev.json.JSONUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +170,18 @@ public class ReadTests {
     @Test
     public void findNativeTest() {
         List<UserDeptDTO> list = readUserService.findNative(1);
+        System.out.println(list);
+    }
+
+    @Test
+    public void findAllStudentTest() {
+        List<Student> list = readUserService.findAllStudent();
+        System.out.println(list);
+    }
+
+    @Test
+    public void findByQueryDslSchoolStudentTest() {
+        List<SchoolStudentDto> list = readUserService.findByQueryDslSchoolStudent(1);
         System.out.println(list);
     }
 }
