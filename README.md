@@ -1,2 +1,2 @@
-# jpademo
-spring data jpa demo
+# jpa QueryDSL demo
+spring data jpa + QueryDSL练习
